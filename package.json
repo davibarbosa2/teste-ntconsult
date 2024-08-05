@@ -19,6 +19,8 @@
     "radix-vue": "^1.9.2",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
+    "vee-validate": "^4.13.2",
+    "vite-plugin-eslint": "^1.8.1",
     "vue": "^3.4.31",
     "vue-router": "4"
   },

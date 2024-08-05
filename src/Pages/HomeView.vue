@@ -10,14 +10,27 @@
       <div class="flex items-center justify-center h-20 p-2 gap-2 bg-white">
         <LocationInput v-model="selectedLocation" />
 
-        <Separator class="h-3/4" orientation="vertical" />
-        <div class="whitespace-nowrap">Checkin</div>
-        <Separator class="h-3/4" orientation="vertical" />
-        <div class="whitespace-nowrap">Check-out</div>
-        <Separator class="h-3/4" orientation="vertical" />
-        <div class="whitespace-nowrap">Número de quartos</div>
-        <Separator class="h-3/4" orientation="vertical" />
-        <div class="whitespace-nowrap">Númeor de hóspedes</div>
+        <Separator
+          class="h-3/4"
+          orientation="vertical"
+        />
+        <div class="whitespace-nowrap">
+          Checkin / Check-out
+        </div>
+        <Separator
+          class="h-3/4"
+          orientation="vertical"
+        />
+        <div class="whitespace-nowrap">
+          Número de quartos
+        </div>
+        <Separator
+          class="h-3/4"
+          orientation="vertical"
+        />
+        <div class="whitespace-nowrap">
+          Númeor de hóspedes
+        </div>
       </div>
 
       <ScrollBar orientation="horizontal" />

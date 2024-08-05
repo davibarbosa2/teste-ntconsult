@@ -28,5 +28,5 @@
         props.class
       )
     "
-  />
+  >
 </template>

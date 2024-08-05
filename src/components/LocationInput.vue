@@ -14,7 +14,10 @@
       </div>
     </PopoverTrigger>
 
-    <PopoverContent class="w-60" align="end">
+    <PopoverContent
+      class="w-60"
+      align="end"
+    >
       <Command>
         <CommandList>
           <CommandInput
@@ -22,7 +25,7 @@
             placeholder="Ex: Rio de Janeiro..."
             :value="searchQuery"
             @input="searchQuery = $event.target.value"
-          ></CommandInput>
+          />
 
           <template v-if="isLoading">
             <div class="space-y-2 mt-2">
@@ -45,6 +48,7 @@
             v-for="location in locations"
             v-else
             class="flex items-center gap-2"
+            :key="location.id"
             :style="{ color: location.nome === model ? '#000' : '#999' }"
             :value="location.id"
             @select="onSelectLocation(location.nome)"
