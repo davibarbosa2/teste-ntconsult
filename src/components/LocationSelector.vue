@@ -20,7 +20,7 @@
       </div>
     </PopoverTrigger>
 
-    <PopoverContent class="w-60" align="end">
+    <PopoverContent class="w-60" align="center">
       <Command>
         <CommandList>
           <CommandInput

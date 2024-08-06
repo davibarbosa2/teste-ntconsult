@@ -1,5 +1,5 @@
 <template>
-  <main class="h-screen w-screen flex flex-col p-8 bg-slate-100 gap-4">
+  <main class="h-screen w-min-dvw flex flex-col p-8 bg-slate-100 gap-4">
     <MainNav />
     <RouterView />
   </main>
