@@ -77,7 +77,9 @@
     getLocalTimeZone,
     today,
   } from "@internationalized/date";
+  import { useRouter } from "vue-router";
 
+  const router = useRouter();
   const searchStore = useSearchStore();
 
   //Validação
@@ -114,7 +116,7 @@
     searchStore.searchCriteria.endDate = dateRange?.end?.toString() || "";
   };
 
-  const onSubmit = handleSubmit((values) => {
+  const onSubmit = handleSubmit(() => {
     if (
       !searchStore.searchCriteria.startDate ||
       !searchStore.searchCriteria.endDate
@@ -135,5 +137,16 @@
       searchStore.searchCriteria.startDate = checkinDate.toString();
       searchStore.searchCriteria.endDate = checkoutDate.toString();
     }
+
+    router.push({
+      name: "search",
+      query: {
+        travellers: searchStore.searchCriteria.travellers,
+        rooms: searchStore.searchCriteria.rooms,
+        destination: searchStore.searchCriteria.destination,
+        startDate: searchStore.searchCriteria.startDate,
+        endDate: searchStore.searchCriteria.endDate,
+      },
+    });
   });
 </script>
