@@ -8,7 +8,7 @@ export default ts.config(
   js.configs.recommended,
   ...ts.configs.recommended,
   ...eslintPluginVue.configs["flat/recommended"],
-  ...eslintConfigPrettier,
+  eslintConfigPrettier,
   {
     rules: {
       "vue/multi-word-component-names": "off",

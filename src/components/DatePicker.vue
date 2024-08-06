@@ -36,8 +36,8 @@
 
     <PopoverContent class="w-auto p-0">
       <RangeCalendar
-        initial-focus
         v-model="value"
+        initial-focus
         :min-value="today(getLocalTimeZone())"
       />
     </PopoverContent>

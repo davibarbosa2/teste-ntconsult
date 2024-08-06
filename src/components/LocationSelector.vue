@@ -4,12 +4,14 @@
       <div class="relative h-full min-w-36">
         <Label class="absolute top-3 left-4">Onde</Label>
         <Button
+          type="button"
           variant="ghost"
           role="combobox"
           :class="
             cn(
               'w-full h-full rounded-full pb-0 pt-6 px-4 justify-start text-left font-normal',
-              !value && 'text-muted-foreground'
+              !value && 'text-muted-foreground',
+              error && 'border-red-500 animate-shake border'
             )
           "
         >
@@ -37,7 +39,7 @@
             </div>
           </template>
 
-          <CommandEmpty v-else-if="error">
+          <CommandEmpty v-else-if="fetchError">
             Houve um erro ao buscar os resultados
           </CommandEmpty>
 
@@ -48,8 +50,8 @@
           <CommandItem
             v-for="location in locations"
             v-else
-            class="flex items-center gap-2"
             :key="location.id"
+            class="flex items-center gap-2"
             :style="{ color: location.nome === value ? '#000' : '#999' }"
             :value="location.id"
             @select="onSelectLocation(location.nome)"
@@ -92,12 +94,22 @@
     estado: string;
   }
 
+  defineOptions({
+    inheritAttrs: false,
+  });
+
   const value = defineModel({
     default: "",
     type: String,
   });
 
   const emit = defineEmits(["update:modelValue"]);
+  defineProps({
+    error: {
+      type: Boolean,
+      default: false,
+    },
+  });
 
   //variables
   const searchQuery = ref("");
@@ -107,7 +119,7 @@
   //composables
   const {
     execute: fetchLocations,
-    error,
+    error: fetchError,
     isLoading,
   } = useAsyncState(
     (query: string) =>
