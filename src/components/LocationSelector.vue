@@ -6,18 +6,19 @@
         <Button
           variant="ghost"
           role="combobox"
-          autofocus
-          class="h-full w-full rounded-full border-none pb-0 pt-6 px-4 text-gray-600 justify-start"
+          :class="
+            cn(
+              'w-auto h-full rounded-full pb-0 pt-6 px-4 justify-start text-left font-normal',
+              !value && 'text-muted-foreground'
+            )
+          "
         >
-          {{ model || "Pesquise um destino" }}
+          {{ value || "Pesquise um destino" }}
         </Button>
       </div>
     </PopoverTrigger>
 
-    <PopoverContent
-      class="w-60"
-      align="end"
-    >
+    <PopoverContent class="w-60" align="end">
       <Command>
         <CommandList>
           <CommandInput
@@ -49,7 +50,7 @@
             v-else
             class="flex items-center gap-2"
             :key="location.id"
-            :style="{ color: location.nome === model ? '#000' : '#999' }"
+            :style="{ color: location.nome === value ? '#000' : '#999' }"
             :value="location.id"
             @select="onSelectLocation(location.nome)"
           >
@@ -83,6 +84,7 @@
     PopoverTrigger,
   } from "@/components/ui/popover";
   import { ref } from "vue";
+  import { cn } from "@/lib/utils";
 
   interface Location {
     id: string;
@@ -90,7 +92,7 @@
     estado: string;
   }
 
-  const model = defineModel({
+  const value = defineModel({
     default: "",
     type: String,
   });
