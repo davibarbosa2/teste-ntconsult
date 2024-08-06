@@ -8,7 +8,7 @@
           role="combobox"
           :class="
             cn(
-              'w-auto h-full rounded-full pb-0 pt-6 px-4 justify-start text-left font-normal',
+              'w-full h-full rounded-full pb-0 pt-6 px-4 justify-start text-left font-normal',
               !value && 'text-muted-foreground'
             )
           "
