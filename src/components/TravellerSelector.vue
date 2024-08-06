@@ -21,7 +21,7 @@
       <div class="flex gap-2">
         <NumberField
           id="travellers"
-          :min="0"
+          :min="1"
           :max="10"
           :model-value="travellers"
           @update:model-value="$emit('update:travellers', $event)"
@@ -35,7 +35,7 @@
         </NumberField>
         <NumberField
           id="rooms"
-          :min="0"
+          :min="1"
           :max="10"
           :model-value="rooms"
           @update:model-value="$emit('update:rooms', $event)"

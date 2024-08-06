@@ -2,7 +2,9 @@
   <Popover v-model:open="isPopoverOpen">
     <PopoverTrigger as-child>
       <div class="relative h-full">
-        <Label class="absolute top-3 left-4">{{ label }}</Label>
+        <Label class="absolute top-3 left-4">
+          {{ label }}
+        </Label>
 
         <Button
           variant="ghost"
@@ -14,14 +16,30 @@
           "
         >
           <CalendarIcon class="mr-2 h-4 w-4" />
-          {{
-            value ? df.format(value.toDate(getLocalTimeZone())) : buttonLabel
-          }}
+          <template v-if="value?.start">
+            <template v-if="value.end">
+              {{ df.format(value.start.toDate(getLocalTimeZone())) }} -
+              {{ df.format(value.end.toDate(getLocalTimeZone())) }}
+            </template>
+
+            <template v-else>
+              {{ df.format(value.start.toDate(getLocalTimeZone())) }}
+            </template>
+          </template>
+
+          <template v-else>
+            {{ buttonLabel }}
+          </template>
         </Button>
       </div>
     </PopoverTrigger>
+
     <PopoverContent class="w-auto p-0">
-      <Calendar initial-focus v-model="value" />
+      <RangeCalendar
+        initial-focus
+        v-model="value"
+        :min-value="today(getLocalTimeZone())"
+      />
     </PopoverContent>
   </Popover>
 </template>
@@ -29,12 +47,14 @@
 <script setup lang="ts">
   import {
     DateFormatter,
-    type DateValue,
     getLocalTimeZone,
+    today,
   } from "@internationalized/date";
 
+  import type { DateRange } from "radix-vue";
+
   import { Calendar as CalendarIcon } from "lucide-vue-next";
-  import { Calendar } from "@/components/ui/calendar";
+  import { RangeCalendar } from "@/components/ui/range-calendar";
   import { Button } from "@/components/ui/button";
   import { Label } from "@/components/ui/label";
 
@@ -45,15 +65,14 @@
   } from "@/components/ui/popover";
   import { cn } from "@/lib/utils";
   import { ref } from "vue";
-  import { watch } from "vue";
 
   const df = new DateFormatter("pt-BR", {
     dateStyle: "short",
   });
 
-  const value = defineModel<DateValue | undefined>({
+  const value = defineModel<DateRange | undefined>({
     required: true,
-    type: Object as () => DateValue,
+    type: Object as () => DateRange,
   });
 
   defineProps({
@@ -69,8 +88,4 @@
   });
 
   const isPopoverOpen = ref(false);
-
-  watch(value, () => {
-    isPopoverOpen.value = false;
-  });
 </script>

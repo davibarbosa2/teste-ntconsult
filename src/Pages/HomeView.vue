@@ -12,16 +12,9 @@
 
         <Separator class="h-3/4" orientation="vertical" />
         <DatePicker
-          button-label="Check-in"
-          label="Check-in"
-          v-model="checkinDate"
-        />
-
-        <Separator class="h-3/4" orientation="vertical" />
-        <DatePicker
-          button-label="Check-out"
-          v-model="checkoutDate"
-          label="Check-out"
+          button-label="Check-in / Check-out"
+          label="Datas da reserva"
+          v-model="starEndDate"
         />
 
         <Separator class="h-3/4" orientation="vertical" />
@@ -53,13 +46,12 @@
   import { Button } from "@/components/ui/button";
   import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
   import Separator from "@/components/ui/separator/Separator.vue";
-  import { type CalendarDate } from "@internationalized/date";
+  import type { DateRange } from "radix-vue";
   import { Search } from "lucide-vue-next";
   import { ref } from "vue";
 
   const selectedLocation = ref("");
-  const checkinDate = ref<CalendarDate>();
-  const checkoutDate = ref<CalendarDate>();
+  const starEndDate = ref<DateRange>();
   const travellers = ref(1);
   const rooms = ref(1);
 </script>
