@@ -21,7 +21,7 @@
       <div class="flex gap-2">
         <NumberField
           id="travellers"
-          :min="1"
+          :min="rooms"
           :max="10"
           :model-value="travellers"
           @update:model-value="$emit('update:travellers', $event)"
@@ -71,16 +71,23 @@
   import { cn } from "@/lib/utils";
   import { User } from "lucide-vue-next";
   import Label from "@/components/ui/label/Label.vue";
-  import { ref } from "vue";
+  import { ref, watch } from "vue";
 
-  defineModel("travellers", {
+  const travellers = defineModel("travellers", {
     default: 0,
     type: Number,
   });
-  defineModel("rooms", {
+  const rooms = defineModel("rooms", {
     default: 0,
     type: Number,
   });
 
+  const emit = defineEmits(["update:travellers", "update:rooms"]);
+
+  watch(rooms, (newValue) => {
+    if (newValue > travellers.value) {
+      emit("update:travellers", newValue);
+    }
+  });
   const isPopoverOpen = ref(false);
 </script>
