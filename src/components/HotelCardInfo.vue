@@ -38,7 +38,7 @@
 
         <div class="flex items-center justify-between">
           <div class="space-y-1">
-            <p class="text-muted-foreground">{{ city }}, {{ state }}</p>
+            <p class="text-muted-foreground">{{ city }}</p>
 
             <div class="flex items-center gap-2 flex-wrap">
               <Badge v-for="(i, idx) in amenities" :key="idx" variant="outline">

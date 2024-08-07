@@ -44,7 +44,7 @@
           </div>
         </TableCell>
 
-        <TableCell>{{ hotel.city }}, {{ hotel.state }}</TableCell>
+        <TableCell>{{ hotel.city }}</TableCell>
 
         <TableCell>{{ formatPrice(hotel.price) }} / noite</TableCell>
 

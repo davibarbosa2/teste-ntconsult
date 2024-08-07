@@ -24,13 +24,9 @@ export function generateHotels(count = 50) {
     "Belo Horizonte",
     "Brasília",
     "Fortaleza",
-    "Recife",
     "Porto Alegre",
     "Curitiba",
-    "Belo Horizonte",
     "Recife",
-    "Porto Alegre",
-    "Curitiba",
   ];
 
   return Array.from({ length: count }, (_, index) => ({
@@ -45,7 +41,6 @@ export function generateHotels(count = 50) {
     price: parseFloat(faker.commerce.price({ min: 100, max: 2000, dec: 2 })),
     amenities: faker.helpers.arrayElements(amenities, { min: 3, max: 8 }),
     city: faker.helpers.arrayElement(mainCities),
-    state: faker.location.state({ abbreviated: true }),
     thumbnails: [
       faker.image.urlPicsumPhotos({ width: 800, height: 600 }),
       faker.image.urlPicsumPhotos({ width: 800, height: 600 }),

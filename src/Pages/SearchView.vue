@@ -83,7 +83,6 @@
           :name="hotel.name"
           :amenities="hotel.amenities"
           :city="hotel.city"
-          :state="hotel.state"
           :description="hotel.description"
           :rating="hotel.rating"
           :checked="!!checkedHotels.find((h) => h.id === hotel.id)"
@@ -140,6 +139,7 @@
             altText: "Tentar novamente",
             onClick: () => {
               searchHotels();
+              checkedHotels.value = [];
             },
           },
           {
@@ -218,6 +218,7 @@
       //se todos os query params estiverem preenchidos, busca os resultados
       if (travellers > 0 && rooms > 0 && destination && startDate && endDate) {
         searchHotels();
+        checkedHotels.value = [];
       }
     },
     { immediate: true }
