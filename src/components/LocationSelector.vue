@@ -71,7 +71,6 @@
   import { Skeleton } from "@/components/ui/skeleton";
   import { MapPin } from "lucide-vue-next";
   import { useAsyncState, watchDebounced } from "@vueuse/core";
-  import { ofetch } from "ofetch";
 
   import {
     Command,
@@ -123,11 +122,11 @@
     isLoading,
   } = useAsyncState(
     (query: string) =>
-      ofetch(`https://brasilapi.com.br/api/cptec/v1/cidade/${query}`).then(
-        (data: Array<Location>) => {
+      fetch(`https://brasilapi.com.br/api/cptec/v1/cidade/${query}`)
+        .then((response) => response.json())
+        .then((data: Array<Location>) => {
           locations.value = data;
-        }
-      ),
+        }),
     null,
     { immediate: false }
   );

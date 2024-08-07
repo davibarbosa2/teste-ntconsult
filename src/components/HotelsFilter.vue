@@ -62,13 +62,13 @@
                 <Wifi />
                 Wifi
               </ToggleGroupItem>
-              <ToggleGroupItem class="flex align-center gap-2" value="pool">
+              <ToggleGroupItem class="flex align-center gap-2" value="piscina">
                 <Waves />
                 Piscina
               </ToggleGroupItem>
               <ToggleGroupItem
                 class="flex align-center gap-2"
-                value="breakfast"
+                value="café da manhã"
               >
                 <HandPlatter />
                 Café da manhã
@@ -76,7 +76,7 @@
               <ToggleGroupItem class="flex align-center gap-2" value="spa">
                 Spa
               </ToggleGroupItem>
-              <ToggleGroupItem class="flex align-center gap-2" value="gym">
+              <ToggleGroupItem class="flex align-center gap-2" value="academia">
                 <Dumbbell />
                 Academia
               </ToggleGroupItem>

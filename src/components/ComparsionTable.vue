@@ -16,7 +16,7 @@
       <TableRow v-for="hotel in hotels" :key="hotel.id">
         <TableCell>
           <div class="flex items-center gap-4">
-            <div class="w-20 h-20">
+            <div class="w-20 h-20 flex-shrink-0">
               <UseImage
                 :src="hotel.thumbnails[0]"
                 alt="Hotel Image"

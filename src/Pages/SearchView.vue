@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-1 flex-col gap-4 w-full h-full">
     <div
-      class="w-full flex items-center sticky top-5 z-10 bg-slate-100 rounded-full p-2"
+      class="w-full flex items-center sticky top-5 z-10 bg-slate-100 rounded-full p-2 gap-4"
     >
       <Dialog v-model:open="isComparsionTableOpen">
         <DialogTrigger as-child>
@@ -23,7 +23,7 @@
           </Button>
         </DialogTrigger>
 
-        <DialogContent class="w-[90vw] max-w-[1200px]">
+        <DialogContent class="w-[90vw] max-w-[1500px]">
           <div class="flex flex-col h-full">
             <DialogHeader class="border-b pb-2">
               <DialogTitle class="text-2xl font-bold">
@@ -49,7 +49,33 @@
       <HotelsFilter @apply-filters="onApplyFilters" />
     </div>
 
-    <div class="flex-1">
+    <div
+      v-if="isSearching"
+      class="flex-1 flex h-full w-full items-center justify-center"
+    >
+      <LoaderCircle class="animate-spin" />
+    </div>
+
+    <div
+      v-else-if="searchError"
+      class="flex-1 flex h-full w-full items-center justify-center"
+    >
+      <div class="flex flex-col gap-4 items-center justify-center">
+        <h1 class="text-2xl font-bold">Ops!</h1>
+        <p class="text-sm text-muted-foreground">
+          Houve um erro ao buscar os resultados
+        </p>
+      </div>
+    </div>
+
+    <div
+      v-else-if="!searchStore.searchResults.length"
+      class="flex-1 flex h-full w-full items-center justify-center"
+    >
+      <EmptySearch />
+    </div>
+
+    <div v-else class="flex-1">
       <div class="grid grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))] gap-6">
         <HotelCardInfo
           v-for="hotel in searchStore.searchResults"
@@ -72,6 +98,7 @@
 
 <script setup lang="ts">
   import ComparsionTable from "@/components/ComparsionTable.vue";
+  import EmptySearch from "@/components/EmptySearch.vue";
   import HotelCardInfo from "@/components/HotelCardInfo.vue";
   import type { FilterObj } from "@/components/HotelsFilter.vue";
   import HotelsFilter from "@/components/HotelsFilter.vue";
@@ -89,14 +116,42 @@
   import SearchBar from "@/containers/SearchBar.vue";
   import { useSearchStore } from "@/stores/searchStore";
   import { Hotel } from "@/types/hotel";
+  import { useAsyncState } from "@vueuse/core";
   import { useRouteQuery } from "@vueuse/router";
-  import { Columns2 } from "lucide-vue-next";
-  import { ref, watch, watchEffect, h } from "vue";
+  import { Columns2, LoaderCircle } from "lucide-vue-next";
+  import { h, ref, watch } from "vue";
 
   const searchStore = useSearchStore();
+  const {
+    execute: searchHotels,
+    isLoading: isSearching,
+    error: searchError,
+  } = useAsyncState(searchStore.searchHotels, null, {
+    immediate: false,
+    onError: () => {
+      toast({
+        title: "Ops!",
+        description:
+          "Houve um erro ao buscar os resultados, tente mudar os parâmetros",
+        variant: "destructive",
+        action: h(
+          ToastAction,
+          {
+            altText: "Tentar novamente",
+            onClick: () => {
+              searchHotels();
+            },
+          },
+          {
+            default: () => "Tentar novamente",
+          }
+        ),
+      });
+    },
+  });
 
-  const travellersQuery = useRouteQuery("travellers", 0, { transform: Number });
-  const roomsQuery = useRouteQuery("rooms", 0, { transform: Number });
+  const travellersQuery = useRouteQuery("travellers", 1, { transform: Number });
+  const roomsQuery = useRouteQuery("rooms", 1, { transform: Number });
   const destinationQuery = useRouteQuery("destination", "", {
     transform: String,
   });
@@ -145,6 +200,30 @@
   };
 
   watch(
+    [
+      travellersQuery,
+      roomsQuery,
+      destinationQuery,
+      startDateQuery,
+      endDateQuery,
+    ],
+    ([travellers, rooms, destination, startDate, endDate]) => {
+      // Atualiza a store com os valores dos query params
+      searchStore.searchCriteria.travellers = travellers;
+      searchStore.searchCriteria.rooms = rooms;
+      searchStore.searchCriteria.destination = destination;
+      searchStore.searchCriteria.startDate = startDate;
+      searchStore.searchCriteria.endDate = endDate;
+
+      //se todos os query params estiverem preenchidos, busca os resultados
+      if (travellers > 0 && rooms > 0 && destination && startDate && endDate) {
+        searchHotels();
+      }
+    },
+    { immediate: true }
+  );
+
+  watch(
     checkedHotels,
     (newValue) => {
       if (newValue.length == 1) {
@@ -156,22 +235,4 @@
     },
     { deep: true }
   );
-
-  watchEffect(() => {
-    searchStore.searchCriteria.travellers = travellersQuery.value;
-    searchStore.searchCriteria.rooms = roomsQuery.value;
-    searchStore.searchCriteria.destination = destinationQuery.value;
-    searchStore.searchCriteria.startDate = startDateQuery.value;
-    searchStore.searchCriteria.endDate = endDateQuery.value;
-
-    if (
-      travellersQuery.value > 0 &&
-      roomsQuery.value > 0 &&
-      destinationQuery.value &&
-      startDateQuery.value &&
-      endDateQuery.value
-    ) {
-      searchStore.searchHotels();
-    }
-  });
 </script>
