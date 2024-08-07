@@ -114,11 +114,11 @@
   import ToggleGroup from "./ui/toggle-group/ToggleGroup.vue";
   import ToggleGroupItem from "./ui/toggle-group/ToggleGroupItem.vue";
 
-  export type FilterObj = {
+  export interface FilterObj {
     orderPrice: undefined | "asc" | "desc";
     orderRating: undefined | "asc" | "desc";
     amenities: string[];
-  };
+  }
   const emit = defineEmits<{
     (e: "apply-filters", filterObj: FilterObj): void;
   }>();

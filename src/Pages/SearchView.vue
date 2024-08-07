@@ -3,22 +3,46 @@
     <div
       class="w-full flex items-center sticky top-5 z-10 bg-slate-100 rounded-full p-2"
     >
-      <Button
-        v-auto-animate
-        class="flex items-center gap-2 rounded-full"
-        variant="outline"
-        :disabled="checkedHotels.length === 0"
-      >
-        <div
-          v-if="checkedHotels.length > 0"
-          class="rounded-full w-6 h-6 text-xs bg-black text-white flex items-center justify-center"
-        >
-          {{ checkedHotels.length }}
-        </div>
+      <Dialog>
+        <DialogTrigger as-child>
+          <Button
+            v-auto-animate
+            class="flex items-center gap-2 rounded-full"
+            variant="outline"
+            :disabled="checkedHotels.length <= 1"
+          >
+            <div
+              v-if="checkedHotels.length > 0"
+              class="rounded-full w-6 h-6 text-xs bg-black text-white flex items-center justify-center"
+            >
+              {{ checkedHotels.length }}
+            </div>
 
-        <Columns2 class="w-4 h-4" />
-        <span>Comparar</span>
-      </Button>
+            <Columns2 class="w-4 h-4" />
+            <span>Comparar</span>
+          </Button>
+        </DialogTrigger>
+
+        <DialogContent class="w-[90vw] max-w-[1200px]">
+          <div class="flex flex-col h-full">
+            <DialogHeader class="border-b pb-2">
+              <DialogTitle class="text-2xl font-bold">
+                Comparar hotéis
+              </DialogTitle>
+
+              <DialogDescription class="text-sm text-muted-foreground">
+                Compare hotéis e escolha o que melhor para sua estadia
+              </DialogDescription>
+            </DialogHeader>
+            <div class="flex-1 overflow-auto max-h-[calc(100vh-200px)]">
+              <ComparsionTable
+                :hotels="checkedHotels"
+                @book-hotel="onBookHotel"
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <SearchBar class="mx-auto" />
 
@@ -28,7 +52,7 @@
     <div class="flex-1">
       <div class="grid grid-cols-[repeat(auto-fill,_minmax(300px,_1fr))] gap-6">
         <HotelCardInfo
-          v-for="hotel in hotels"
+          v-for="hotel in searchStore.searchResults"
           :key="hotel.id"
           :name="hotel.name"
           :amenities="hotel.amenities"
@@ -38,6 +62,7 @@
           :rating="hotel.rating"
           :checked="!!checkedHotels.find((h) => h.id === hotel.id)"
           :thumbnails="hotel.thumbnails"
+          :price="hotel.price"
           @update:checked="onCheckHotel(hotel)"
         />
       </div>
@@ -46,36 +71,51 @@
 </template>
 
 <script setup lang="ts">
+  import ComparsionTable from "@/components/ComparsionTable.vue";
   import HotelCardInfo from "@/components/HotelCardInfo.vue";
-  import SearchBar from "@/containers/SearchBar.vue";
-  import HotelsFilter from "@/components/HotelsFilter.vue";
   import type { FilterObj } from "@/components/HotelsFilter.vue";
-
-  import { useSearchStore } from "@/stores/searchStore";
-  import { useRouteQuery } from "@vueuse/router";
-  import { ref, watchEffect } from "vue";
-  import { Columns2 } from "lucide-vue-next";
+  import HotelsFilter from "@/components/HotelsFilter.vue";
   import Button from "@/components/ui/button/Button.vue";
+  import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+  } from "@/components/ui/dialog";
+  import DialogDescription from "@/components/ui/dialog/DialogDescription.vue";
+  import { toast } from "@/components/ui/toast";
+  import SearchBar from "@/containers/SearchBar.vue";
+  import { useSearchStore } from "@/stores/searchStore";
+  import { Hotel } from "@/types/hotel";
+  import { useRouteQuery } from "@vueuse/router";
+  import { Columns2 } from "lucide-vue-next";
+  import { ref, watch, watchEffect } from "vue";
 
   const searchStore = useSearchStore();
 
-  const travellers = useRouteQuery("travellers", 0, { transform: Number });
-  const rooms = useRouteQuery("rooms", 0, { transform: Number });
-  const destination = useRouteQuery("destination", "", { transform: String });
-  const startDate = useRouteQuery("startDate", "", { transform: String });
-  const endDate = useRouteQuery("endDate", "", { transform: String });
+  const travellersQuery = useRouteQuery("travellers", 0, { transform: Number });
+  const roomsQuery = useRouteQuery("rooms", 0, { transform: Number });
+  const destinationQuery = useRouteQuery("destination", "", {
+    transform: String,
+  });
+  const startDateQuery = useRouteQuery("startDate", "", { transform: String });
+  const endDateQuery = useRouteQuery("endDate", "", { transform: String });
 
-  const checkedHotels = ref<Array<{ id: string; name: string }>>([]);
+  const checkedHotels = ref<Hotel[]>([]);
 
-  const onCheckHotel = (hotel: { id: string; name: string }) => {
-    const isBeind = checkedHotels.value.find((h) => h.id === hotel.id);
+  const onCheckHotel = (hotel: Hotel) => {
+    const index = checkedHotels.value.findIndex((h) => h.id === hotel.id);
 
-    if (isBeind) {
-      checkedHotels.value = checkedHotels.value.filter(
-        (h) => h.id !== hotel.id
-      );
-    } else {
+    if (index !== -1) {
+      checkedHotels.value.splice(index, 1);
+    } else if (checkedHotels.value.length < 5) {
       checkedHotels.value.push(hotel);
+    } else {
+      toast({
+        title: "Você já selecionou o máximo de 5 hotéis para comparar",
+        duration: 1500,
+      });
     }
   };
 
@@ -86,108 +126,38 @@
     console.log(amenities, orderRating, orderPrice);
   };
 
+  const onBookHotel = (hotel: Hotel) => {
+    console.log(hotel);
+  };
+
+  watch(
+    checkedHotels,
+    (newValue) => {
+      if (newValue.length == 1) {
+        toast({
+          title: "Selecione mais um hotel para comparar",
+          duration: 1500,
+        });
+      }
+    },
+    { deep: true }
+  );
+
   watchEffect(() => {
-    searchStore.searchCriteria.travellers = travellers.value;
-    searchStore.searchCriteria.rooms = rooms.value;
-    searchStore.searchCriteria.destination = destination.value;
-    searchStore.searchCriteria.startDate = startDate.value;
-    searchStore.searchCriteria.endDate = endDate.value;
+    searchStore.searchCriteria.travellers = travellersQuery.value;
+    searchStore.searchCriteria.rooms = roomsQuery.value;
+    searchStore.searchCriteria.destination = destinationQuery.value;
+    searchStore.searchCriteria.startDate = startDateQuery.value;
+    searchStore.searchCriteria.endDate = endDateQuery.value;
 
     if (
-      travellers.value > 0 &&
-      rooms.value > 0 &&
-      destination.value &&
-      startDate.value &&
-      endDate.value
+      travellersQuery.value > 0 &&
+      roomsQuery.value > 0 &&
+      destinationQuery.value &&
+      startDateQuery.value &&
+      endDateQuery.value
     ) {
       searchStore.searchHotels();
     }
   });
-
-  const hotels = [
-    {
-      id: "1",
-      name: "hotel 1",
-      description: "desc 1",
-      rating: 4,
-      amenities: ["wifi", "piscina", "café da manhã", "spa"],
-      city: "São Paulo",
-      state: "SP",
-      thumbnails: [
-        "https://picsum.photos/id/123/800/600",
-        "https://picsum.photos/id/124/800/600",
-        "https://picsum.photos/id/125/800/600",
-      ],
-    },
-    {
-      id: "2",
-      name: "hotel 2",
-      description: "desc 2",
-      rating: 2,
-      amenities: ["wifi", "piscina", "café da manhã", "academia"],
-      city: "Rio de Janeiro",
-      state: "RJ",
-      thumbnails: [
-        "https://picsum.photos/id/126/800/600",
-        "https://picsum.photos/id/127/800/600",
-        "https://picsum.photos/id/128/800/600",
-      ],
-    },
-    {
-      id: "3",
-      name: "hotel 3",
-      description: "desc 3",
-      rating: 1,
-      amenities: ["wifi", "piscina", "café da manhã", "spa", "academia"],
-      city: "Niterói",
-      state: "RJ",
-      thumbnails: [
-        "https://picsum.photos/id/129/800/600",
-        "https://picsum.photos/id/130/800/600",
-        "https://picsum.photos/id/131/800/600",
-      ],
-    },
-    {
-      id: "4",
-      name: "hotel 4",
-      description: "desc 4",
-      rating: 4,
-      amenities: ["wifi", "piscina", "academia"],
-      city: "Vitória",
-      state: "ES",
-      thumbnails: [
-        "https://picsum.photos/id/132/800/600",
-        "https://picsum.photos/id/133/800/600",
-        "https://picsum.photos/id/134/800/600",
-      ],
-    },
-    {
-      id: "5",
-      name: "hotel 5",
-      description: "desc 5",
-      rating: 5,
-      amenities: ["café da manhã", "spa", "academia"],
-      city: "Recife",
-      state: "PE",
-      thumbnails: [
-        "https://picsum.photos/id/135/800/600",
-        "https://picsum.photos/id/136/800/600",
-        "https://picsum.photos/id/137/800/600",
-      ],
-    },
-    {
-      id: "6",
-      name: "hotel 6",
-      description: "desc 6",
-      rating: 3,
-      amenities: ["wifi", "piscina", "café da manhã", "spa", "academia"],
-      city: "Ribeirão Preto",
-      state: "SP",
-      thumbnails: [
-        "https://picsum.photos/id/486/800/600",
-        "https://picsum.photos/id/139/800/600",
-        "https://picsum.photos/id/140/800/600",
-      ],
-    },
-  ];
 </script>

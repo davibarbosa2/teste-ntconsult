@@ -3,11 +3,25 @@
     <Carousel class="w-full relative aspect-video rounded-t-lg">
       <CarouselContent>
         <CarouselItem v-for="(i, idx) in thumbnails" :key="idx">
-          <img
-            alt="Hotel Image"
-            class="object-cover w-full h-full rounded-t-lg"
-            :src="i"
-          />
+          <AspectRatio :ratio="16 / 9">
+            <UseImage
+              alt="Hotel Image"
+              class="object-cover w-full h-full rounded-t-lg"
+              :src="i"
+            >
+              <template #loading>
+                <div class="flex h-full w-full items-center justify-center">
+                  <LoaderCircle class="animate-spin" />
+                </div>
+              </template>
+
+              <template #error>
+                <div class="flex h-full w-full items-center justify-center">
+                  <ImageOff />
+                </div>
+              </template>
+            </UseImage>
+          </AspectRatio>
         </CarouselItem>
       </CarouselContent>
       <CarouselPrevious class="absolute top-1/2 left-2" />
@@ -18,7 +32,7 @@
       <div class="flex flex-col gap-y-1">
         <div class="flex items-center justify-between">
           <h3 class="text-xl font-semibold">{{ name }}</h3>
-          
+
           <h3 class="text-xl font-semibold">{{ formatPrice(price) }}</h3>
         </div>
 
@@ -65,10 +79,15 @@
 </template>
 
 <script setup lang="ts">
-  import { StarIcon } from "lucide-vue-next";
+  import { formatPrice } from "@/lib/utils";
+  import { UseImage } from "@vueuse/components";
+  import { ImageOff, LoaderCircle, StarIcon } from "lucide-vue-next";
+  import { PropType } from "vue";
+  import AspectRatio from "./ui/aspect-ratio/AspectRatio.vue";
+  import Badge from "./ui/badge/Badge.vue";
+  import Button from "./ui/button/Button.vue";
   import Card from "./ui/card/Card.vue";
   import CardContent from "./ui/card/CardContent.vue";
-  import Button from "./ui/button/Button.vue";
   import {
     Carousel,
     CarouselContent,
@@ -77,8 +96,6 @@
     CarouselPrevious,
   } from "./ui/carousel";
   import Checkbox from "./ui/checkbox/Checkbox.vue";
-  import Badge from "./ui/badge/Badge.vue";
-  import { PropType } from "vue";
 
   defineEmits(["update:checked"]);
 
@@ -132,13 +149,4 @@
       default: 0,
     },
   });
-
-  const formatPrice = (price: number) => {
-    const formatter = new Intl.NumberFormat("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-
-    return formatter.format(price);
-  };
 </script>

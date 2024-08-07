@@ -13,6 +13,7 @@
     "@formkit/auto-animate": "^0.8.2",
     "@internationalized/date": "^3.5.5",
     "@vee-validate/zod": "^4.13.2",
+    "@vueuse/components": "^10.11.0",
     "@vueuse/core": "^10.11.0",
     "@vueuse/router": "^10.11.0",
     "class-variance-authority": "^0.7.0",
