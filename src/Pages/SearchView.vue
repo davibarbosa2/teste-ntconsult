@@ -3,7 +3,7 @@
     <div
       class="w-full flex items-center sticky top-5 z-10 bg-slate-100 rounded-full p-2"
     >
-      <Dialog>
+      <Dialog v-model:open="isComparsionTableOpen">
         <DialogTrigger as-child>
           <Button
             v-auto-animate
@@ -85,12 +85,13 @@
   } from "@/components/ui/dialog";
   import DialogDescription from "@/components/ui/dialog/DialogDescription.vue";
   import { toast } from "@/components/ui/toast";
+  import ToastAction from "@/components/ui/toast/ToastAction.vue";
   import SearchBar from "@/containers/SearchBar.vue";
   import { useSearchStore } from "@/stores/searchStore";
   import { Hotel } from "@/types/hotel";
   import { useRouteQuery } from "@vueuse/router";
   import { Columns2 } from "lucide-vue-next";
-  import { ref, watch, watchEffect } from "vue";
+  import { ref, watch, watchEffect, h } from "vue";
 
   const searchStore = useSearchStore();
 
@@ -103,6 +104,7 @@
   const endDateQuery = useRouteQuery("endDate", "", { transform: String });
 
   const checkedHotels = ref<Hotel[]>([]);
+  const isComparsionTableOpen = ref(false);
 
   const onCheckHotel = (hotel: Hotel) => {
     const index = checkedHotels.value.findIndex((h) => h.id === hotel.id);
@@ -115,6 +117,18 @@
       toast({
         title: "Você já selecionou o máximo de 5 hotéis para comparar",
         duration: 1500,
+        action: h(
+          ToastAction,
+          {
+            altText: "Comparar hotéis",
+            onClick: () => {
+              isComparsionTableOpen.value = true;
+            },
+          },
+          {
+            default: () => "Comparar",
+          }
+        ),
       });
     }
   };
@@ -136,7 +150,7 @@
       if (newValue.length == 1) {
         toast({
           title: "Selecione mais um hotel para comparar",
-          duration: 1500,
+          duration: 1000,
         });
       }
     },
