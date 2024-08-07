@@ -46,7 +46,11 @@
 
       <SearchBar class="mx-auto" />
 
-      <HotelsFilter @apply-filters="onApplyFilters" />
+      <HotelsFilter
+        v-model:orderPrice="orderPriceQuery"
+        v-model:orderRating="orderRatingQuery"
+        v-model:amenities="amenitiesQuery"
+      />
     </div>
 
     <div
@@ -99,7 +103,6 @@
   import ComparsionTable from "@/components/ComparsionTable.vue";
   import EmptySearch from "@/components/EmptySearch.vue";
   import HotelCardInfo from "@/components/HotelCardInfo.vue";
-  import type { FilterObj } from "@/components/HotelsFilter.vue";
   import HotelsFilter from "@/components/HotelsFilter.vue";
   import Button from "@/components/ui/button/Button.vue";
   import {
@@ -158,6 +161,13 @@
   const startDateQuery = useRouteQuery("startDate", "", { transform: String });
   const endDateQuery = useRouteQuery("endDate", "", { transform: String });
 
+  const orderPriceQuery = useRouteQuery<"asc" | "desc">("orderPrice", "asc");
+  const orderRatingQuery = useRouteQuery<"asc" | "desc">("orderRating", "desc");
+
+  const amenitiesQuery = useRouteQuery("amenities", [], {
+    transform: (value: string[]) => value.map((v) => v.toLowerCase()),
+  });
+
   const checkedHotels = ref<Hotel[]>([]);
   const isComparsionTableOpen = ref(false);
 
@@ -188,13 +198,6 @@
     }
   };
 
-  const onApplyFilters = (filterObj: FilterObj) => {
-    const { amenities, orderRating, orderPrice } = filterObj;
-
-    //TODO: implementar filtros
-    console.log(amenities, orderRating, orderPrice);
-  };
-
   const onBookHotel = (hotel: Hotel) => {
     console.log(hotel);
   };
@@ -206,14 +209,29 @@
       destinationQuery,
       startDateQuery,
       endDateQuery,
+      orderPriceQuery,
+      orderRatingQuery,
+      amenitiesQuery,
     ],
-    ([travellers, rooms, destination, startDate, endDate]) => {
+    ([
+      travellers,
+      rooms,
+      destination,
+      startDate,
+      endDate,
+      orderPrice,
+      orderRating,
+      amenities,
+    ]) => {
       // Atualiza a store com os valores dos query params
       searchStore.searchCriteria.travellers = travellers;
       searchStore.searchCriteria.rooms = rooms;
       searchStore.searchCriteria.destination = destination;
       searchStore.searchCriteria.startDate = startDate;
       searchStore.searchCriteria.endDate = endDate;
+      searchStore.searchCriteria.orderPrice = orderPrice;
+      searchStore.searchCriteria.orderRating = orderRating;
+      searchStore.searchCriteria.amenities = amenities;
 
       //se todos os query params estiverem preenchidos, busca os resultados
       if (travellers > 0 && rooms > 0 && destination && startDate && endDate) {

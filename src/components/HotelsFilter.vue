@@ -1,5 +1,5 @@
 <template>
-  <Popover v-model:open="isPopoverOpen">
+  <Popover>
     <PopoverTrigger as-child>
       <Button variant="outline" class="flex items-center gap-2 rounded-full">
         <ArrowDownUp class="w-4 h-4" />
@@ -13,9 +13,10 @@
           <h3 class="font-medium">Preço</h3>
           <div class="flex items-center gap-2">
             <ToggleGroup
-              v-model="filterObj.orderPrice"
               type="single"
               variant="outline"
+              :model-value="orderPrice"
+              @update:model-value="$emit('update:orderPrice', $event)"
             >
               <ToggleGroupItem class="flex align-center gap-2" value="asc">
                 <ArrowUpNarrowWide />
@@ -34,9 +35,10 @@
           <h3 class="font-medium">Avaliação</h3>
           <div class="flex items-center gap-2">
             <ToggleGroup
-              v-model="filterObj.orderRating"
-              type="single"
               variant="outline"
+              default-value=""
+              :model-value="orderRating"
+              @update:model-value="$emit('update:orderRating', $event)"
             >
               <ToggleGroupItem class="flex align-center gap-2" value="asc">
                 <ArrowUpNarrowWide />
@@ -54,9 +56,10 @@
           <h3 class="font-medium">Comodidades</h3>
           <div class="flex flex-wrap gap-2">
             <ToggleGroup
-              v-model="filterObj.amenities"
               type="multiple"
               variant="outline"
+              :model-value="amenities"
+              @update:model-value="$emit('update:amenities', $event)"
             >
               <ToggleGroupItem class="flex align-center gap-2" value="wifi">
                 <Wifi />
@@ -83,13 +86,6 @@
             </ToggleGroup>
           </div>
         </div>
-
-        <div class="flex justify-end">
-          <Button @click="applyFilters">
-            <Check />
-            Aplicar Filtros
-          </Button>
-        </div>
       </div>
     </PopoverContent>
   </Popover>
@@ -100,38 +96,34 @@
     ArrowDownNarrowWide,
     ArrowDownUp,
     ArrowUpNarrowWide,
-    Check,
     Dumbbell,
     HandPlatter,
     Waves,
     Wifi,
   } from "lucide-vue-next";
-  import { reactive, ref } from "vue";
   import Button from "./ui/button/Button.vue";
   import Popover from "./ui/popover/Popover.vue";
   import PopoverContent from "./ui/popover/PopoverContent.vue";
   import PopoverTrigger from "./ui/popover/PopoverTrigger.vue";
   import ToggleGroup from "./ui/toggle-group/ToggleGroup.vue";
   import ToggleGroupItem from "./ui/toggle-group/ToggleGroupItem.vue";
+  import { PropType } from "vue";
 
-  export interface FilterObj {
-    orderPrice: undefined | "asc" | "desc";
-    orderRating: undefined | "asc" | "desc";
-    amenities: string[];
-  }
-  const emit = defineEmits<{
-    (e: "apply-filters", filterObj: FilterObj): void;
-  }>();
+  defineProps({
+    amenities: {
+      type: Array as PropType<string[]>,
+      default: () => [],
+    },
 
-  const isPopoverOpen = ref(false);
-  const filterObj = reactive<FilterObj>({
-    orderPrice: undefined,
-    orderRating: undefined,
-    amenities: [],
+    orderPrice: {
+      type: String as PropType<"asc" | "desc">,
+      default: undefined,
+    },
+    orderRating: {
+      type: String as PropType<"asc" | "desc">,
+      default: undefined,
+    },
   });
 
-  const applyFilters = () => {
-    emit("apply-filters", filterObj);
-    isPopoverOpen.value = false;
-  };
+  defineEmits(["update:amenities", "update:orderPrice", "update:orderRating"]);
 </script>

@@ -30,7 +30,7 @@
 
     <CardContent class="p-6 space-y-4">
       <div class="flex flex-col gap-y-1">
-        <div class="flex items-center justify-between">
+        <div class="flex items-center justify-between gap-2">
           <h3 class="text-xl font-semibold">{{ name }}</h3>
 
           <h3 class="text-xl font-semibold">{{ formatPrice(price) }}</h3>

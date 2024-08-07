@@ -11,6 +11,9 @@ export const useSearchStore = defineStore("search", {
       endDate: "",
       travellers: 1,
       rooms: 1,
+      amenities: [] as string[],
+      orderPrice: "asc" as "asc" | "desc" | undefined,
+      orderRating: "desc" as "asc" | "desc" | undefined,
     },
     searchResults: [] as Hotel[],
   }),
@@ -22,9 +25,12 @@ export const useSearchStore = defineStore("search", {
         destination: this.searchCriteria.destination,
         startDate: this.searchCriteria.startDate,
         endDate: this.searchCriteria.endDate,
+        amenities: this.searchCriteria.amenities.join(","),
+        orderPrice: this.searchCriteria.orderPrice || "asc",
+        orderRating: this.searchCriteria.orderRating || "asc",
       });
 
-      const response = await axios(`/api/hotels?${query}`);
+      const response = await axios(`/api/hotels?${query.toString()}`);
       this.searchResults = response.data;
     },
   },
