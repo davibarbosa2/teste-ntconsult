@@ -49,25 +49,26 @@
   import LocationSelector from "@/components/LocationSelector.vue";
   import TravellerSelector from "@/components/TravellerSelector.vue";
   import { Button } from "@/components/ui/button";
+  import { FormControl, FormField, FormItem } from "@/components/ui/form";
   import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
   import Separator from "@/components/ui/separator/Separator.vue";
-  import { useSearchStore } from "@/stores/searchStore";
-  import { Search } from "lucide-vue-next";
-  import { type DateRange } from "radix-vue";
-  import { FormField, FormItem, FormControl } from "@/components/ui/form";
-  import { useForm } from "vee-validate";
-  import { toTypedSchema } from "@vee-validate/zod";
-  import * as z from "zod";
-  import { watch } from "vue";
   import { toast } from "@/components/ui/toast";
+  import { useSearchStore } from "@/stores/searchStore";
   import {
     DateFormatter,
     getLocalTimeZone,
     today,
   } from "@internationalized/date";
-  import { useRouter } from "vue-router";
+  import { toTypedSchema } from "@vee-validate/zod";
+  import { Search } from "lucide-vue-next";
+  import { type DateRange } from "radix-vue";
+  import { useForm } from "vee-validate";
+  import { watch } from "vue";
+  import { useRouter, useRoute } from "vue-router";
+  import * as z from "zod";
 
   const router = useRouter();
+  const route = useRoute();
   const searchStore = useSearchStore();
 
   //Validação
@@ -135,6 +136,7 @@
     router.push({
       name: "search",
       query: {
+        ...route.query,
         travellers: searchStore.searchCriteria.travellers,
         rooms: searchStore.searchCriteria.rooms,
         destination: searchStore.searchCriteria.destination,

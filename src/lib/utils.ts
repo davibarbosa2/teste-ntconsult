@@ -39,7 +39,7 @@ export function generateHotels(count = 50) {
     description: faker.lorem.paragraph(),
     rating: faker.number.int({ min: 1, max: 5 }),
     price: parseFloat(faker.commerce.price({ min: 100, max: 2000, dec: 2 })),
-    amenities: faker.helpers.arrayElements(amenities, { min: 3, max: 8 }),
+    amenities: faker.helpers.arrayElements(amenities, { min: 1, max: 5 }),
     city: faker.helpers.arrayElement(mainCities),
     thumbnails: [
       faker.image.urlPicsumPhotos({ width: 800, height: 600 }),

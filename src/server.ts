@@ -25,7 +25,7 @@ export function makeServer({ environment = "development" } = {}) {
 
         const destination = request.queryParams.destination as string;
         const rooms = request.queryParams.rooms as string;
-        const amenities = request.queryParams.amenities as string[];
+        const amenities = request.queryParams.amenities as string;
         const orderPrice = request.queryParams.orderPrice as "asc" | "desc";
         const orderRating = request.queryParams.orderRating as "asc" | "desc";
 
@@ -41,34 +41,36 @@ export function makeServer({ environment = "development" } = {}) {
           );
         }
 
-        if (amenities?.length > 0) {
-          hotels = hotels.filter((hotel) =>
-            amenities.every((amenity) =>
-              hotel.amenities.some((hotelAmenity) =>
-                hotelAmenity.toLowerCase().includes(amenity.toLowerCase())
-              )
-            )
-          );
-        }
-
         if (orderPrice) {
           hotels = hotels.sort((a, b) => {
             if (orderPrice === "asc") {
-              return a.price - b.price;
+              return Number(a.price) - Number(b.price);
             }
 
-            return b.price - a.price;
+            return Number(b.price) - Number(a.price);
           });
         }
 
         if (orderRating) {
           hotels = hotels.sort((a, b) => {
             if (orderRating === "asc") {
-              return a.rating - b.rating;
+              return Number(a.rating) - Number(b.rating);
             }
 
-            return b.rating - a.rating;
+            return Number(b.rating) - Number(a.rating);
           });
+        }
+
+        //MIRAGE aceitar apenas o ultimo valor quando a query param é passada como array (amenities=wifi&amenities=piscina...)
+        const amenitiesAsArray = amenities.split(",");
+        if (amenitiesAsArray.length > 0) {
+          hotels = hotels.filter((hotel) =>
+            amenitiesAsArray.every((amenity) =>
+              hotel.amenities.some((hotelAmenity) =>
+                hotelAmenity.toLowerCase().includes(amenity.toLowerCase())
+              )
+            )
+          );
         }
 
         return hotels;
