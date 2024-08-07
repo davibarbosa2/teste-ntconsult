@@ -15,27 +15,36 @@
     </Carousel>
 
     <CardContent class="p-6 space-y-4">
-      <div class="flex items-center justify-between">
-        <div class="space-y-1">
+      <div class="flex flex-col gap-y-1">
+        <div class="flex items-center justify-between">
           <h3 class="text-xl font-semibold">{{ name }}</h3>
-          <p class="text-muted-foreground">{{ city }}, {{ state }}</p>
+          
+          <h3 class="text-xl font-semibold">{{ formatPrice(price) }}</h3>
+        </div>
 
-          <div class="flex items-center gap-2 flex-wrap">
-            <Badge v-for="(i, idx) in amenities" :key="idx" variant="outline">
-              {{ i }}
-            </Badge>
+        <div class="flex items-center justify-between">
+          <div class="space-y-1">
+            <p class="text-muted-foreground">{{ city }}, {{ state }}</p>
+
+            <div class="flex items-center gap-2 flex-wrap">
+              <Badge v-for="(i, idx) in amenities" :key="idx" variant="outline">
+                {{ i }}
+              </Badge>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1">
+            <StarIcon
+              v-for="i in 5"
+              :key="i"
+              class="w-5 h-5"
+              :class="i <= rating ? 'fill-primary' : 'fill-muted'"
+            />
+            <span class="text-sm font-medium">{{ rating }}</span>
           </div>
         </div>
-        <div class="flex items-center gap-1">
-          <StarIcon
-            v-for="i in 5"
-            :key="i"
-            class="w-5 h-5"
-            :class="i <= rating ? 'fill-primary' : 'fill-muted'"
-          />
-          <span class="text-sm font-medium">{{ rating }}</span>
-        </div>
       </div>
+
       <p class="text-muted-foreground">
         {{ description }}
       </p>
@@ -117,5 +126,19 @@
         "https://picsum.photos/id/125/800/600",
       ],
     },
+
+    price: {
+      type: Number,
+      default: 0,
+    },
   });
+
+  const formatPrice = (price: number) => {
+    const formatter = new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+
+    return formatter.format(price);
+  };
 </script>
