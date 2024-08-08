@@ -1,14 +1,14 @@
-import { createServer, Model } from "miragejs";
-import { Hotel } from "./types/hotel";
+import { createServer, Factory, Model, Response } from "miragejs";
 import { generateHotels } from "./lib/utils";
 
-const hotels: Hotel[] = generateHotels(200);
+const hotels = generateHotels(200);
 
 export function makeServer({ environment = "development" } = {}) {
   const server = createServer({
     environment,
     models: {
       hotel: Model,
+      reservation: Model,
     },
 
     seeds(server) {
@@ -21,13 +21,13 @@ export function makeServer({ environment = "development" } = {}) {
       this.namespace = "api";
 
       this.get("/hotels", (schema, request) => {
-        let hotels = schema.all("hotel").models as unknown as Hotel[];
+        let hotels = schema.hotels.all().models;
 
-        const destination = request.queryParams.destination as string;
-        const rooms = request.queryParams.rooms as string;
-        const amenities = request.queryParams.amenities as string;
-        const orderPrice = request.queryParams.orderPrice as "asc" | "desc";
-        const orderRating = request.queryParams.orderRating as "asc" | "desc";
+        const destination = request.queryParams.destination;
+        const rooms = request.queryParams.rooms;
+        const amenities = request.queryParams.amenities;
+        const orderPrice = request.queryParams.orderPrice;
+        const orderRating = request.queryParams.orderRating;
 
         if (destination) {
           hotels = hotels.filter(
@@ -61,7 +61,7 @@ export function makeServer({ environment = "development" } = {}) {
           });
         }
 
-        //MIRAGE aceitar apenas o ultimo valor quando a query param é passada como array (amenities=wifi&amenities=piscina...)
+        //MIRAGE aceita apenas o ultimo valor quando a query param é passada como array (amenities=wifi&amenities=piscina...)
         const amenitiesAsArray = amenities.split(",");
         if (amenitiesAsArray.length > 0) {
           hotels = hotels.filter((hotel) =>
@@ -74,6 +74,29 @@ export function makeServer({ environment = "development" } = {}) {
         }
 
         return hotels;
+      });
+
+      this.get("/hotels/:id", (schema, request) => {
+        const id = request.params.id;
+
+        const hotel = schema.findBy("hotel", { id });
+
+        if (hotel) {
+          return hotel;
+        } else {
+          return new Response(404, {}, { error: "Hotel não encontrado" });
+        }
+      });
+
+      //cria uma reserva
+      this.post("/reservation", (schema, request) => {
+        const data = JSON.parse(request.requestBody);
+
+        return schema.reservations.create({
+          ...data,
+          id: Date.now().toString(),
+          status: "pending",
+        });
       });
 
       this.passthrough("http://localhost:5173/**");

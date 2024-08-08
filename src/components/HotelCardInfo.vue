@@ -63,8 +63,8 @@
         {{ description }}
       </p>
 
-      <div class="flex justify-between items-center">
-        <Button variant="default" class="">Reservar</Button>
+      <div v-if="!isBooking" class="flex justify-between items-center">
+        <Button variant="default" @click="$emit('book-hotel')">Reservar</Button>
 
         <div class="flex items-center space-x-2">
           <Checkbox
@@ -97,7 +97,7 @@
   } from "./ui/carousel";
   import Checkbox from "./ui/checkbox/Checkbox.vue";
 
-  defineEmits(["update:checked"]);
+  defineEmits(["update:checked", "book-hotel"]);
 
   defineProps({
     checked: {
@@ -147,6 +147,11 @@
     price: {
       type: Number,
       default: 0,
+    },
+
+    isBooking: {
+      type: Boolean,
+      default: false,
     },
   });
 </script>

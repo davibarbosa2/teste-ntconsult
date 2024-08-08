@@ -93,6 +93,7 @@
           :thumbnails="hotel.thumbnails"
           :price="hotel.price"
           @update:checked="onCheckHotel(hotel)"
+          @book-hotel="onBookHotel(hotel)"
         />
       </div>
     </div>
@@ -122,8 +123,11 @@
   import { useRouteQuery } from "@vueuse/router";
   import { Columns2, LoaderCircle } from "lucide-vue-next";
   import { h, ref, watch } from "vue";
+  import { useRouter } from "vue-router";
 
+  const router = useRouter();
   const searchStore = useSearchStore();
+
   const {
     execute: searchHotels,
     isLoading: isSearching,
@@ -161,11 +165,13 @@
   const startDateQuery = useRouteQuery("startDate", "", { transform: String });
   const endDateQuery = useRouteQuery("endDate", "", { transform: String });
 
-  const orderPriceQuery = useRouteQuery<"asc" | "desc">("orderPrice", "asc");
-  const orderRatingQuery = useRouteQuery<"asc" | "desc">("orderRating", "desc");
+  const orderPriceQuery = useRouteQuery<"asc" | "desc">("orderPrice");
+  const orderRatingQuery = useRouteQuery<"asc" | "desc">("orderRating");
 
   const amenitiesQuery = useRouteQuery("amenities", [], {
-    transform: (value: string[]) => value.map((v) => v.toLowerCase()),
+    transform: (value: string[]) => {
+      return Array.isArray(value) ? value.map((v) => v.toLowerCase()) : [value];
+    },
   });
 
   const checkedHotels = ref<Hotel[]>([]);
@@ -199,7 +205,15 @@
   };
 
   const onBookHotel = (hotel: Hotel) => {
-    console.log(hotel);
+    router.push({
+      name: "reservation",
+      query: {
+        hotelId: hotel.id,
+        rooms: roomsQuery.value,
+        startDate: startDateQuery.value,
+        endDate: endDateQuery.value,
+      },
+    });
   };
 
   watch(

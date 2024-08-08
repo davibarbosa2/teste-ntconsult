@@ -1,6 +1,6 @@
 import { Hotel } from "@/types/hotel";
 import { parseDate } from "@internationalized/date";
-import { defineStore } from "pinia";
+import { acceptHMRUpdate, defineStore } from "pinia";
 import axios from "axios";
 
 export const useSearchStore = defineStore("search", {
@@ -12,8 +12,8 @@ export const useSearchStore = defineStore("search", {
       travellers: 1,
       rooms: 1,
       amenities: [] as string[],
-      orderPrice: "asc" as "asc" | "desc" | undefined,
-      orderRating: "desc" as "asc" | "desc" | undefined,
+      orderPrice: "" as "asc" | "desc" | undefined,
+      orderRating: "" as "asc" | "desc" | undefined,
     },
     searchResults: [] as Hotel[],
   }),
@@ -26,8 +26,8 @@ export const useSearchStore = defineStore("search", {
         startDate: this.searchCriteria.startDate,
         endDate: this.searchCriteria.endDate,
         amenities: this.searchCriteria.amenities.join(","),
-        orderPrice: this.searchCriteria.orderPrice || "asc",
-        orderRating: this.searchCriteria.orderRating || "asc",
+        orderPrice: this.searchCriteria.orderPrice || "",
+        orderRating: this.searchCriteria.orderRating || "",
       });
 
       const response = await axios(`/api/hotels?${query.toString()}`);
@@ -51,3 +51,7 @@ export const useSearchStore = defineStore("search", {
     },
   },
 });
+
+if (import.meta.hot) {
+  import.meta.hot.accept(acceptHMRUpdate(useSearchStore, import.meta.hot));
+}
