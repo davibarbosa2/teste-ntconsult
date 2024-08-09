@@ -8,19 +8,19 @@ const routes = [
       {
         path: "",
         name: "home",
-        component: () => import("@/Pages/HomeView.vue"),
+        component: () => import("@/pages/HomeView.vue"),
       },
 
       {
         path: "/search",
         name: "search",
-        component: () => import("@/Pages/SearchView.vue"),
+        component: () => import("@/pages/SearchView.vue"),
       },
 
       {
         path: "/reservation",
         name: "reservation",
-        component: () => import("@/Pages/ReservationView.vue"),
+        component: () => import("@/pages/ReservationView.vue"),
       },
     ],
   },
