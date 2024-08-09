@@ -1,4 +1,6 @@
-import { createServer, Factory, Model, Response } from "miragejs";
+// eslint-disable-next-line
+//@ts-nocheck
+import { createServer, Model, Response } from "miragejs";
 import { generateHotels } from "./lib/utils";
 
 const hotels = generateHotels(200);

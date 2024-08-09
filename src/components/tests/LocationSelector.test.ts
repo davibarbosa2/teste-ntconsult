@@ -4,7 +4,6 @@ import userEvent from "@testing-library/user-event";
 import LocationSelector from "../LocationSelector.vue";
 import { beforeEach } from "node:test";
 import "@testing-library/jest-dom";
-import { json } from "stream/consumers";
 
 global.fetch = vi.fn();
 

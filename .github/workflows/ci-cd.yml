@@ -24,11 +24,11 @@ jobs:
       - name: Lint
         run: yarn lint
 
-      - name: Build
-        run: yarn build
-
       - name: Test
         run: yarn test
+
+      - name: Build
+        run: yarn build
 
     # Add a deployment step here if needed
     # - name: Deploy

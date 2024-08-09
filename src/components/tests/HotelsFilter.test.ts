@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getByTestId, render, RenderOptions } from "@testing-library/vue";
+import { render, RenderOptions } from "@testing-library/vue";
 import userEvent from "@testing-library/user-event";
 import HotelsFilter from "../HotelsFilter.vue";
 import "@testing-library/jest-dom";
@@ -29,7 +29,7 @@ describe("HotelsFilter", () => {
   });
 
   it("emite eventos corretos ao clicar nas opções de filtro", async () => {
-    const { user, emitted, getByTestId, debug } = setupComponent(HotelsFilter);
+    const { user, emitted, getByTestId } = setupComponent(HotelsFilter);
     await user.click(getByTestId("popover-trigger-button"));
     const priceOrder = getByTestId("price-order-desc");
     const ratingOrder = getByTestId("rating-order-asc");

@@ -124,6 +124,7 @@
   import { Columns2, LoaderCircle } from "lucide-vue-next";
   import { h, ref, watch } from "vue";
   import { useRouter } from "vue-router";
+  import { vAutoAnimate } from "@formkit/auto-animate/vue";
 
   const router = useRouter();
   const searchStore = useSearchStore();
