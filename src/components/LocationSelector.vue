@@ -4,6 +4,7 @@
       <div class="relative h-full min-w-36">
         <Label class="absolute top-3 left-4">Onde</Label>
         <Button
+          data-testid="location-button"
           type="button"
           variant="ghost"
           role="combobox"
@@ -20,10 +21,11 @@
       </div>
     </PopoverTrigger>
 
-    <PopoverContent class="w-60" align="center">
+    <PopoverContent class="w-60" align="center" data-testid="location-popover">
       <Command>
         <CommandList>
           <CommandInput
+            data-testid="location-input"
             auto-focus
             placeholder="Ex: Rio de Janeiro..."
             :value="searchQuery"
@@ -32,10 +34,12 @@
 
           <template v-if="isLoading">
             <div class="space-y-2 mt-2">
-              <Skeleton class="h-4 w-[250px]" />
-              <Skeleton class="h-4 w-[200px]" />
-              <Skeleton class="h-4 w-[200px]" />
-              <Skeleton class="h-4 w-[200px]" />
+              <Skeleton
+                v-for="i in 4"
+                :key="i"
+                class="h-4 w-[250px]"
+                data-testid="location-skeleton"
+              />
             </div>
           </template>
 
@@ -51,6 +55,7 @@
             v-for="location in locations"
             v-else
             :key="location.id"
+            data-testid="location-item"
             class="flex items-center gap-2"
             :style="{ color: location.nome === value ? '#000' : '#999' }"
             :value="location.id"

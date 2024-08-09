@@ -4,6 +4,7 @@
       <div class="relative h-full">
         <Label class="absolute top-3 left-4">Viajantes</Label>
         <Button
+          data-testid="popover-trigger-button"
           variant="ghost"
           :class="
             cn(
@@ -21,6 +22,7 @@
       <div class="flex gap-2">
         <NumberField
           id="travellers"
+          data-testid="travellers-number-field"
           :min="rooms"
           :max="10"
           :model-value="travellers"
@@ -35,6 +37,7 @@
         </NumberField>
         <NumberField
           id="rooms"
+          data-testid="rooms-number-field"
           :min="1"
           :max="10"
           :model-value="rooms"

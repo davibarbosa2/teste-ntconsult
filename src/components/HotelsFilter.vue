@@ -1,13 +1,21 @@
 <template>
   <Popover>
     <PopoverTrigger as-child>
-      <Button variant="outline" class="flex items-center gap-2 rounded-full">
+      <Button
+        data-testid="popover-trigger-button"
+        variant="outline"
+        class="flex items-center gap-2 rounded-full"
+      >
         <ArrowDownUp class="w-4 h-4" />
         <span>Filtros</span>
       </Button>
     </PopoverTrigger>
 
-    <PopoverContent class="w-auto p-4" align="end">
+    <PopoverContent
+      class="w-auto p-4"
+      align="end"
+      data-testid="popover-content"
+    >
       <div class="grid gap-4">
         <div class="grid gap-2">
           <h3 class="font-medium">Preço</h3>
@@ -18,12 +26,20 @@
               :model-value="orderPrice"
               @update:model-value="$emit('update:orderPrice', $event)"
             >
-              <ToggleGroupItem class="flex align-center gap-2" value="asc">
+              <ToggleGroupItem
+                class="flex align-center gap-2"
+                value="asc"
+                data-testid="price-order-asc"
+              >
                 <ArrowUpNarrowWide />
                 Crescente
               </ToggleGroupItem>
 
-              <ToggleGroupItem class="flex align-center gap-2" value="desc">
+              <ToggleGroupItem
+                class="flex align-center gap-2"
+                value="desc"
+                data-testid="price-order-desc"
+              >
                 <ArrowDownNarrowWide />
                 Decrescente
               </ToggleGroupItem>
@@ -40,12 +56,20 @@
               :model-value="orderRating"
               @update:model-value="$emit('update:orderRating', $event)"
             >
-              <ToggleGroupItem class="flex align-center gap-2" value="asc">
+              <ToggleGroupItem
+                class="flex align-center gap-2"
+                value="asc"
+                data-testid="rating-order-asc"
+              >
                 <ArrowUpNarrowWide />
                 Crescente
               </ToggleGroupItem>
 
-              <ToggleGroupItem class="flex align-center gap-2" value="desc">
+              <ToggleGroupItem
+                class="flex align-center gap-2"
+                value="desc"
+                data-testid="rating-order-desc"
+              >
                 <ArrowDownNarrowWide />
                 Decrescente
               </ToggleGroupItem>
@@ -61,25 +85,42 @@
               :model-value="amenities"
               @update:model-value="$emit('update:amenities', $event)"
             >
-              <ToggleGroupItem class="flex align-center gap-2" value="wifi">
+              <ToggleGroupItem
+                class="flex align-center gap-2"
+                value="wifi"
+                data-testid="amenities-wifi"
+              >
                 <Wifi />
                 Wifi
               </ToggleGroupItem>
-              <ToggleGroupItem class="flex align-center gap-2" value="piscina">
+              <ToggleGroupItem
+                class="flex align-center gap-2"
+                value="piscina"
+                data-testid="amenities-piscina"
+              >
                 <Waves />
                 Piscina
               </ToggleGroupItem>
               <ToggleGroupItem
+                data-testid="amenities-cafe-da-manha"
                 class="flex align-center gap-2"
                 value="café da manhã"
               >
                 <HandPlatter />
                 Café da manhã
               </ToggleGroupItem>
-              <ToggleGroupItem class="flex align-center gap-2" value="spa">
+              <ToggleGroupItem
+                class="flex align-center gap-2"
+                value="spa"
+                data-testid="amenities-spa"
+              >
                 Spa
               </ToggleGroupItem>
-              <ToggleGroupItem class="flex align-center gap-2" value="academia">
+              <ToggleGroupItem
+                class="flex align-center gap-2"
+                value="academia"
+                data-testid="amenities-academia"
+              >
                 <Dumbbell />
                 Academia
               </ToggleGroupItem>
