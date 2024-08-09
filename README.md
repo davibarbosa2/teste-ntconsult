@@ -16,6 +16,8 @@ Projeto que permite a pesquisa de hotéis com critérios selecionados pelo usuá
 - [MirageJS](https://miragejs.com/) - Mock de API
 - [Zod](https://zod.dev/) - Validação de dados
 - [VueUse](https://vueuse.org/) - Biblioteca de hooks para Vue
+- [Vitest](https://vitest.dev/) - Test Runner
+- [Testing Library](https://testing-library.com/docs/vue-testing-library/intro) - Utilitários para teste em Vue
 
 ## Iniciando o projeto
 
@@ -60,11 +62,19 @@ Projeto que permite a pesquisa de hotéis com critérios selecionados pelo usuá
 
 ## Arquitetura
 
-- Componentes: Hierarquia de componentes Vue com fluxo de dados unidirecional
-- Gerenciamento de estado: Utilização do Pinia para gerenciamento de estado global
-- Integração com API: Mock de API usando MirageJS para simular endpoints
-- Roteamento: Vue Router para navegação entre páginas
-- Validação: Uso do Zod para validação de dados e formulários
+A arquitetura do projeto é simples e organizada, com componentes que se comunicam entre si através de props e eventos.
+
+A única excessão seria o container `SearchBar` (componente sem props que interage com a store e mantém seu próprio estado), que é responsável por receber os dados de pesquisa e enviá-los para a rota de busca, passando os dados através de query params.
+
+Decidi fazer dessa forma pois vejo que esse tipo de aplicação precisa ser facilmente compartilhavel, e que o uso de rotas e query params é uma boa prática para isso.
+
+A view de Search por sua vez, vê se esses parametros existem no query params e realiza a busca com os dados recebidos, atualizando o estado da store com os resultados.
+
+O container `SearchBar` também é responsável por realizar a busca de hotéis, atualizando o estado da store com os resultados.
+
+O último fluxo de dados acontece quando o usuário clica no botão de reservar, que é redirecionado para a rota de reserva, passando os dados através de query params, como o id do hotel e outras informações relevantes. Essa view busca o hotel pelo id passado no query params e mostra um formulário para o usuário preencher com as informações de reserva.
+
+Como pedido no teste, implementei validações, features de UX e um básico sistema de notificações, como o alerta de sucesso na reserva.
 
 ## Imagens do projeto
 
