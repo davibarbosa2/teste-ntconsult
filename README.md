@@ -11,7 +11,7 @@ Projeto que permite a pesquisa de hotéis com critérios selecionados pelo usuá
 - [Tailwind CSS](https://tailwindcss.com/) - Framework CSS
 - [Vite](https://vitejs.dev/) - Ferramenta de build
 - [Axios](https://axios-http.com/) - Cliente HTTP
-- [Vuelidate](https://vuelidate.js.org/) - Validação de formulários
+- [Vee-Validate](https://vee-validate.logaretm.com/v4/) - Validação de formulários
 - [Radix/vue](https://www.shadcn-vue.com/) - Componentes acessíveis e customizáveis (shadcn-vue)
 - [MirageJS](https://miragejs.com/) - Mock de API
 - [Zod](https://zod.dev/) - Validação de dados
@@ -54,7 +54,7 @@ Projeto que permite a pesquisa de hotéis com critérios selecionados pelo usuá
 - Visualização de detalhes de cada hotel
 - Formulário para reserva de um quarto
 - Mock de API com MirageJS
-- Validação de formulários com Vuelidate
+- Validação de formulários com Vee-Validate
 - Gerenciamento de estado com Pinia
 - Estilos globais com Tailwind CSS
 - Componentes acessíveis e customizáveis com Radix/vue
